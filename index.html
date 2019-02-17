@@ -1,0 +1,2581 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>MonEflow - Documentation</title>
+    
+    <link href="images/favicon.ico" rel="icon" type="image/ico" />
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+
+
+
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="javascripts/all.js"></script>
+
+      <script>
+        $(function() {
+          setupLanguages(["shell","javascript"]);
+        });
+      </script>
+
+  </head>
+
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;javascript&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <a href="Documentation" class="logo"><img src="images/logo.png" class="logo" alt="Logo" /></a>
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">shell</a>
+              <a href="#" data-language-name="javascript">javascript</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+
+      <div id="toc" class="tocify">
+       
+      </div>
+
+
+      
+        <ul class="toc-footer">
+            <li><a href='#'>Contact us</a></li>
+            <li><a href='#'>Documentation Powered by Ruby on rails</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='get-started'>Get Started</h1>
+<p>The MonEFlow Pay API is is constructed around a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> structure. By using familiar and predictable URLs, our API works with HTTP response codes to define and signal errors. HTTP methods (or verbs as they are commonly called) are used to determine the action of a request. API responses and errors return in <a href="http://www.json.org/">JSON</a></p>
+<h1 id='overview'>Overview</h1>
+<p>We provide complementary client and server SDKs to complete your integration:</p>
+
+<ul>
+<li>  The client SDKs enable you to securely collect payment information from your customers</li>
+<li>  The server SDKs enable you to act on the collected payment information</li>
+</ul>
+
+<p>We have SDKs for the following client platforms and server languages:</p>
+
+<table><thead>
+<tr>
+<th><strong>Client SDKs</strong></th>
+<th><strong>Server SDKs</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>- JavaScript</td>
+<td>- .NET <br /> - PHP</td>
+</tr>
+</tbody></table>
+
+<p>The client SDKs require authorization. In this  guide, we&#39;ll use a client token generated on server side to perform authorization.
+The server SDKs uses your client Id and secret key to initiate any server-to-server request. To initiate a payment request you can either use a full card (for PCI Compliant Merchant) or a <strong>Payment Nonce</strong>.</p>
+<h2 id='how-it-works'>How it works</h2>
+<p>The diagram below illustrates the step required to return a payment nonce and then use that to process a payment.</p>
+
+<!--img src="images/Sequence_diagram.JPG" class="lang-specific ruby"-->
+
+<div class="mermaid" class="mermaid-div">sequenceDiagram
+Your Client ->> Your Server: Request a client token
+Your Server-->>Your Client:Generate and send the client token
+Your Client ->> MonEFlow Pay Server: submit payment information
+MonEFlow Pay Server -->> Your Client: returns a payment nonce
+Your Client ->> Your Server: Send payment nonce
+Your Server ->> MonEFlow Pay Server: Create a transaction
+MonEFlow Pay Server -->> Your Server: Generate a response
+Your Server-->>Your Client: Send a response
+</div>
+
+<p><br/><br/></p>
+
+<ol>
+<li>Your <del>app or</del> web front-end requests a client token from your server
+in order to initialize the client SDK</li>
+<li>Your server generates and sends a <strong>client token</strong> back to your client
+with the server SDK</li>
+<li>Once the client SDK is initialized and the customer has submitted
+payment information, the SDK communicates that information and
+returns a <strong>payment nonce</strong></li>
+<li>You then send the payment nonce to your server</li>
+<li>Your server code receives the payment nonce from your client
+and then uses the server SDK to <strong>create a transaction</strong> or perform
+other functions.</li>
+</ol>
+<h2 id='client-token'>Client Token</h2>
+<p>A client token is a signed data blob that includes configuration and authorization information required by the <strong>client SDK</strong>. <del>These should not be reused; a new client token should be generated for each request that&#39;s sent to MonEFlow PAY. For security, we will revoke client tokens if they are reused excessively within a short time period.</del> [Currently client tokens have a lifetime of 8 hours, after which it expires.]</p>
+
+<p>Your server is responsible for generating the client token, which contains all of the necessary configuration information to set up the client SDKs. When your server provides a client token to your client, it authenticates the application to communicate directly to MonEFlow PAY.</p>
+
+<p>Your client is responsible for obtaining the client token from your server and initializing the client SDK.</p>
+<h2 id='payment-nonce'>Payment Nonce</h2>
+<p>A payment method nonce is a secure, one-time-use reference to payment information. It&#39;s the key element that allows your server to communicate sensitive payment information to MonEFlow PAY without ever touching the raw data.</p>
+<h3 id='security'>Security</h3>
+<p>Security is important for all payment method types, but it&#39;s particularly critical for cards.</p>
+
+<p>The Payment Card Industry Security Standards Council mandates compliance with their Data Security Standard (PCI DSS), and the less exposure your business has to raw card data, the easier it is to demonstrate compliance. Using payment nonces in place of raw card data helps keep your PCI compliance burden to a minimum.</p>
+<h3 id='usage'>Usage</h3>
+<p>Our servers generate payment nonces in response to requests from our client and server SDKs.</p>
+
+<p>In general, your client will be responsible for receiving payment nonces from MonEFlow PAY and sending them to your server. Your server will then be responsible for sending those payment nonces back to MonEFlow PAY on requests to perform certain actions.</p>
+
+<p>You&#39;ll need payment nonces for two main purposes:</p>
+
+<ol>
+<li>To create transactions</li>
+<li>To create or update payment methods in the Vault for repeat use</li>
+</ol>
+<h3 id='lifespan'>Lifespan</h3>
+<p>A payment nonce may only be used once. <del>If it is not used, it expires 3 hours after being created.</del> [Yet to be implemented]</p>
+<h1 id='authentication'>Authentication</h1>
+<p>When enrolled with MonEFlow PAY, a set of client ID and secret credentials are provided together with your merchant ID. </p>
+
+<aside class="notice">
+Client ID and secret can be generated from your merchant dashboard.
+The merchant ID is provided to you upon creation of a business (Business specific)
+</aside>
+<h2 id='server-to-server'>Server-to-server</h2><pre class="highlight shell tab-shell"><code><span class="c"># Example header</span>
+
+curl https://API_endpoint_here <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic &lt;encoded string&gt;"</span> <span class="se">\ </span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code><span class="c1">// Example header</span>
+
+<span class="nx">curl</span> <span class="nx">https</span><span class="p">:</span><span class="c1">//API_endpoint_here \</span>
+  <span class="o">-</span><span class="nx">H</span> <span class="s2">"Authorization: Basic &lt;encoded string&gt;"</span> <span class="err">\</span> 
+
+</code></pre>
+<p>To initiate a request to any MonEFlow PAY&#39;s endpoints from your server, the <code>Authorization</code> field of your HTTPS header must include an Basic Authentication scheme.</p>
+
+<aside class="warning">
+Use HTTPS for all API requests, HTTP requests will not be successful.
+</aside>
+
+<p>The &quot;Basic&quot; HTTP authentication scheme is defined in <a href="https://tools.ietf.org/html/rfc7617">RFC 7617</a>, which transmits credentials as Client ID/Secret pairs, encoded using base64. For e.g :</p>
+
+<ol>
+<li>Build a string of the <code>&lt;clientID&gt;:&lt;ClientSecret&gt;</code></li>
+<li>BASE64 encode the string.</li>
+<li>Supply an Authorization header with content Basic followed by the encoded string</li>
+</ol>
+<h2 id='client-to-vnext-pay-server'>Client to MonEFlow PAY server</h2>
+<blockquote>
+<p>Retrieve client token</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  https://api.moneflow.com/v1/merchants/&lt;merchantID&gt;/client_token <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">''</span><span class="se">\'</span><span class="s1">'grant_type=client_credentials'</span><span class="se">\'</span><span class="s1">''</span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="s2">"'grant_type=client_credentials'"</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"https://api.moneflow.com/v1/merchants/&lt;merchantID&gt;/client_token"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;client_token&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tokenType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"expiresOn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-02T21:33:09Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"issuedOn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-01T21:33:09Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Together with every client side request, we need to send a client token. To retrieve a this, you pass the Basic Authentication in the <code>Authorization</code> header of a get access token request.</p>
+
+<p>In exchange of these credentials the MonEFlow PAY server will issue a client token. </p>
+
+<blockquote>
+<p>This sample request uses a bearer token to get payment nonce for a client:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  http://API_endpoint_here <span class="se">\</span>
+  -H <span class="s1">'authorization: Bearer &lt;client_token&gt;'</span> <span class="se">\</span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://API_endpoint_here"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Bearer &lt;client_token&gt;"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<p>Include this bearer token in API requests in the <code>Authorization</code> header with the Bearer authentication scheme.</p>
+<h1 id='integration'>Integration</h1>
+<p>MonEFlow PAY offers two ways to integrate your website or <del>mobile app</del> with our payment platforms. </p>
+
+<p>The quickest is to integrate through our out-of-the-box SDKs for Web, <del>iOS and Android</del>. Set up your server, add a few lines of code to your website <del>or app</del>, and you&#39;re up and running.</p>
+
+<p>If you want to use your own UI and you are a PCI SAQ-D merchant, use the Direct API integration. You can also use the API to collect your shopper&#39;s card data. </p>
+
+<p>Either way, your integration can accept all the payment methods offered by adyen, <del>and support 3D Secure.</del></p>
+<h2 id='api-integration'>API integration</h2>
+<p>Build your own custom checkout experience using our API integration.</p>
+
+<p>With our online payments API integration, you&#39;ll be able to accept different payment methods, while maintaining full control over the UI and user experience.</p>
+
+<p>It is highly advisable to use one of our libraries to connect with the MonEFlow PAY APIs.</p>
+
+<aside class="notice">
+Payment with full card details is not available to merchants by default. To use this endpoint, please contact your relationship manager.
+</aside>
+
+<p>Are you sure the full card API is for you? Great! Here is the <a href="#create-payment">request</a>..</p>
+<h2 id='client-sdk'>Client SDK</h2>
+<p>Client SDK is quick and easy to integrate, accepts online payments from all major credit cards, and is customizable to your brand.</p>
+
+<p>The CLient SDK will embed the a frames payment form to your website and allow your customers to enter their payment details directly on your checkout page. From these Frames, your customers&#39; sensitive information is processed by us and exchanged for a payment nonce. This process is called tokenization. After you have a credit card nonce, you&#39;re able to create a payment, add a customer, or save the card for later.</p>
+
+<iframe src="" width="100%" height="250px" style="margin-top: 0!important; border:0;margin:auto; display:block;font-size:15px;color:#4c555a"> </iframe>
+
+<p>Try it out!</p>
+
+<ul>
+<li>use one of our test cards, for example,  4111 1111 1111 1111</li>
+<li>use any future expiry date (mm/yy)</li>
+<li>and the CVV is  123</li>
+</ul>
+<h3 id='payment-methods'>Payment methods</h3>
+<p>sure, Frames looks great! But, it also has lots of payment options:
+- VISA
+- MasterCard
+- American Express
+- JCB
+- Diners Club
+- Discover</p>
+<h3 id='the-three-step-process'>The three-step process</h3>
+<p>It doesn&#39;t take long to get started with the client SDK. To accept online payments with the MonEFlow SDK, you&#39;ll need an integration that can:</p>
+
+<ol>
+<li>Create a client token from your server.</li>
+<li>Create a payment nonce.</li>
+<li>Perform the payment request.</li>
+</ol>
+
+<aside class="notice">
+
+To see an example of a Web SDK integration, [check out our GitHub](#)
+</aside>
+<h4 id='step-1-create-a-client-token'>Step 1: Create a client token</h4>
+<p>A client is used to securely transmit payment data between the shopper and the MonEFlow PAY payments platform. Create one from your server by making a POST request to the  <code>/merchants/&lt;merchantID&gt;/client_token</code> endpoint. Specify your  merchant id, the  client id and client secret you&#39;re using for your integration. </p>
+
+<p>The request is described in the <a href="#client-to-vnext-pay-server">authentication section</a></p>
+
+<aside class="warning">
+Execute the request from your server, not your website.
+</aside>
+
+<p>The response will contain a client token. You&#39;ll use this to initialize the SDK in the next step.</p>
+<h4 id='step-2-create-a-payment-nonce'>Step 2: Create a payment nonce.</h4>
+<p>Next, add the Client SDK to your website. The SDK will render the necessary inputs, that will securely collect the shopper&#39;s payment details, and make generate a payment nonce. To do this:</p>
+<h5 id='1-integrate-sdk'>1. Integrate SDK</h5>
+<p>Embed the Client SDK by adding the following code to the <head> of your payment page.</p>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"http://assets.nazim.io/web/1.0.0/js/client.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"http://assets.nazim.io/web/1.0.0/js/hosted-fields.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre>
+<p>Then add the payment form to your page using a div.</p>
+<pre class="highlight html tab-html"><code>
+<span class="nt">&lt;form</span> <span class="na">id=</span><span class="s">"payment-form"</span> <span class="na">method=</span><span class="s">"post"</span> <span class="na">action=</span><span class="s">"/checkouts"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;section&gt;</span>
+        <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"card-number"</span><span class="nt">&gt;</span>Card Number<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"card-number"</span> <span class="na">class=</span><span class="s">"hosted-field"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+        <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"expiration-date"</span><span class="nt">&gt;</span>Expiration Date<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"expiration-date"</span> <span class="na">class=</span><span class="s">"hosted-field"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+        <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"cvv"</span><span class="nt">&gt;</span>CVV<span class="nt">&lt;/label&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"cvv"</span> <span class="na">class=</span><span class="s">"hosted-field"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+    <span class="nt">&lt;/section&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"button-container"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"nonce"</span> <span class="na">name=</span><span class="s">"payment_method_nonce"</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Purchase"</span> <span class="na">id=</span><span class="s">"idsubmit"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+
+</code></pre><h5 id='2-initialize-sdk'>2. initialize SDK</h5>
+<p>Initialize the sdk by adding the script below at the end of the body of your page.</p>
+
+<p>This will initialise an instance of the mpgate client, generate a credit card nonce on submit and submit the payment nonce to your server.</p>
+<pre class="highlight html tab-html"><code>
+<span class="nt">&lt;script&gt;</span>
+    <span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'#payment-form'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">btnsubmit</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'input[type="submit"]'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">client_token</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">client_token</span><span class="o">&gt;</span><span class="p">;</span>
+
+
+    <span class="nx">mpgate</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+        <span class="na">authorization</span><span class="p">:</span> <span class="nx">client_token</span><span class="p">,</span>
+        <span class="na">debug</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">clientInstance</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">createHostedFields</span><span class="p">(</span><span class="nx">clientInstance</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="kd">var</span> <span class="nx">hostedField</span><span class="p">;</span>
+    <span class="kd">function</span> <span class="nx">createHostedFields</span><span class="p">(</span><span class="nx">clientInstance</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">mpgate</span><span class="p">.</span><span class="nx">hostedFields</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+            <span class="na">client</span><span class="p">:</span> <span class="nx">clientInstance</span><span class="p">,</span>
+            <span class="na">fields</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">number</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="na">selector</span><span class="p">:</span> <span class="s1">'#card-number'</span><span class="p">,</span>
+                    <span class="na">placeholder</span><span class="p">:</span> <span class="s1">'4111 1111 1111 1111'</span>
+                <span class="p">},</span>
+                <span class="na">cvv</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="na">selector</span><span class="p">:</span> <span class="s1">'#cvv'</span><span class="p">,</span>
+                    <span class="na">placeholder</span><span class="p">:</span> <span class="s1">'123'</span>
+                <span class="p">},</span>
+                <span class="na">expirationDate</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="na">selector</span><span class="p">:</span> <span class="s1">'#expiration-date'</span><span class="p">,</span>
+                    <span class="na">placeholder</span><span class="p">:</span> <span class="s1">'MM/YYYY'</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">hostedFieldsInstance</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="nx">hostedField</span> <span class="o">=</span> <span class="nx">hostedFieldsInstance</span><span class="p">;</span>
+            <span class="nx">btnsubmit</span><span class="p">.</span><span class="nx">removeAttribute</span><span class="p">(</span><span class="s1">'disabled'</span><span class="p">);</span>
+            <span class="nx">form</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'submit'</span><span class="p">,</span> <span class="nx">formSubmitEvent</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">formSubmitEvent</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+
+        <span class="nx">hostedField</span><span class="p">.</span><span class="nx">tokenize</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Error'</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Add the nonce to the form and submit</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'#nonce'</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">nonce</span><span class="p">;</span>
+            <span class="nx">form</span><span class="p">.</span><span class="nx">submit</span><span class="p">();</span>
+        <span class="p">});</span>
+    <span class="p">};</span>
+
+<span class="nt">&lt;/script&gt;</span>
+
+</code></pre><h4 id='step-2-perform-the-payment-request'>Step 2: Perform the payment request</h4>
+<p>The payment nonce is posted to your server where it can be used to perform a <a href="#create-payment">payment request</a> using the server SDK.</p>
+
+<p>The funding instrument to be used is the <a href="#credit_card_nonce">credit card nonce</a>.</p>
+<h1 id='api-request'>API Request</h1>
+<p>To construct a REST API request, combine these components:</p>
+
+<table><thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>The HTTP method</td>
+<td>- <code>GET</code>. Requests data from a resource.<br/>- <code>POST</code>. Submits data to a resource to process.<br/>- <code>PUT</code>. Updates a resource.<br/>- <code>PATCH</code>. Partially updates a resource.<br/>- <code>DELETE</code>. Deletes a resource.</td>
+</tr>
+<tr>
+<td>The URL to the API service</td>
+<td>Live. <code>https://api.moneflow.com</code></td>
+</tr>
+<tr>
+<td>The URI to the resource</td>
+<td>The resource to query, submit data to, update, or delete. <br/><br/> For example, <code>v1/merchants/&lt;merchant_id/&gt;</code>. <br/><br/> Where <code>&lt;merchant_id&gt;</code> id the unique identifier of the business registered with MonEFlow PAY</td>
+</tr>
+<tr>
+<td>Query parameters</td>
+<td>Optional. Controls which data appears in the response. Use to filter, limit the size of, and sort the data in an API response.</td>
+</tr>
+<tr>
+<td><a href="#http-request-header">HTTP request headers</a></td>
+<td>Includes the <code>Authorization</code> header with the access token.</td>
+</tr>
+<tr>
+<td>A JSON request body</td>
+<td>Required for most <code>GET</code>, <code>POST</code>, <code>PUT</code>, and <code>PATCH</code> calls.</td>
+</tr>
+</tbody></table>
+<h2 id='http-request-header'>HTTP Request Header</h2>
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Required to make API calls. <br/> <br/>On client SDK we use a bearer token in the <code>Authorization</code> header <br/> Click here to see how to get a client token <br/><br/> To make REST API calls, include a <code>Basic</code> authentication scheme in the header</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>Required for operations with a request body. <br/><br/> Specifies the request format. The syntax is:<br/><br/> <code>Content-Type: application/&lt;format&gt;</code> <br/><br/> Where  <code>format</code>  is  <code>json</code>.</td>
+</tr>
+</tbody></table>
+<h1 id='payment-nonce'>Payment Nonce</h1>
+<p>The payment nonce is a string returned by the client SDK to represent a payment method. This string is a reference to the payer payment information that was provided in your payment form and should be sent to your server where it can be used with the server SDKs to create a new payment request.</p>
+<h2 id='get-credit-card-nonce'>Get Credit card nonce</h2><pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/&lt;merchant_id&gt;/credit-card-nonce <span class="se">\</span>
+  -H <span class="s1">'authorization: Bearer &lt;client_token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "number": "4005520201264821"
+    ,"expire_month": 12
+    ,"expire_year": 2020
+    ,"cvv2": "123"
+}'</span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"number"</span><span class="p">:</span> <span class="s2">"4005520201264821"</span><span class="p">,</span>
+  <span class="s2">"expire_month"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="s2">"expire_year"</span><span class="p">:</span> <span class="mi">2020</span><span class="p">,</span>
+  <span class="s2">"cvv2"</span><span class="p">:</span> <span class="s2">"123"</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://api.nazim.io/v1/merchants/merchant_id/credit-card-nonce"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Bearer &lt;client_token&gt;"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"brand_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VISA"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"credit_card_nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dd959bad-0943-4d2e-9baf-fa64656420b7"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"last4"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4821"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Visa"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"expire_month"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"expire_year"</span><span class="p">:</span><span class="w"> </span><span class="mi">2020</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"expires_on"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-03T14:20:53Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issued_on"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-02T14:20:53Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<aside class="notice">
+`POST` /v1/merchants/<merchant_id>/credit-card-nonce
+</aside>
+
+<p>Retrieves a credit card nonce from the credit card information. </p>
+
+<aside class="notice">
+Used by the client SDK to retrieve a credit card nonce. This should not be called on server
+</aside>
+<h3 id='request-body'>Request body</h3>
+<ul>
+<li><h4 id='number-string-required'>number <code>string</code> <span style="color:orange;">required</span></h4>
+<p>Credit card number. 
+Numeric characters only with no spaces or punctuation. 
+The string must conform with modulo and length required by each credit card type. </p></li>
+<li><h4 id='expire_month-integer-required'>expire_month <code>integer</code> <span style="color:orange;">required</span></h4>
+<p>Expiration month with no leading zero. 
+Acceptable values are 1 through 12.</p></li>
+<li><h4 id='expire_year-integer-required'>expire_year <code>integer</code> <span style="color:orange;">required</span></h4>
+<p>Expiration year 
+Acceptable values should be 4 digits</p></li>
+<li><h4 id='cvv2-string'>cvv2 <code>string</code></h4>
+<p>3-4 digit card validation code.</p></li>
+</ul>
+<h3 id='response-body'>Response body</h3>
+<ul>
+<li><h4 id='data-object'>data <code>object</code></h4>
+<ul>
+<li><h5 id='brand_code-string'>brand_code <code>string</code></h5>
+<p>The credit card brand. Value is visa, mastercard, discover, or amex.</p></li>
+<li><h5 id='credit_card_nonce-string'>credit_card_nonce <code>string</code></h5>
+<p>Credit card payment nonce used to perform server side transaction request</p></li>
+<li><h5 id='last4-string'>last4 <code>string</code></h5>
+<p>The last four digits of the stored credit card number.</p></li>
+<li><h5 id='type-string'>type <code>string</code></h5>
+<p>The credit card type. Value is visa, mastercard, discover, or amex.</p></li>
+<li><h5 id='expire_month-integer'>expire_month <code>integer</code></h5>
+<p>The expiration month with no leading zero. Value is from 1 to 12.</p></li>
+<li><h5 id='expire_year-integer'>expire_year <code>integer</code></h5>
+<p>The four-digit expiration year.     </p></li>
+<li><h5 id='expires_on-string-internet-date-and-time-format'>expires_on <code>string</code> <a href="https://tools.ietf.org/html/rfc3339#section-5.6" title="external link">Internet date and time format</a></h5>
+<p>The date and time when the payment nonce expires</p></li>
+<li><h5 id='issued_on-string-internet-date-and-time-format'>issued_on <code>string</code> <a href="https://tools.ietf.org/html/rfc3339#section-5.6" title="external link">Internet date and time format</a></h5>
+<p>The date and time when the payment nonce was issued</p></li>
+</ul></li>
+</ul>
+<h1 id='payment'>Payment</h1>
+<p>To help you through the payment process, our Payments REST API easily and securely accept online and <del>mobile</del> payments. </p>
+
+<p>To help you in the various steps of the process, our API provides necessary actions associated with payments</p>
+<h2 id='payment-process'>Payment process</h2><h3 id='step-1-payment'>Step 1: Payment</h3>
+<p>A payment can be of 2 Intent:</p>
+
+<ol>
+<li><code>Sale</code> : Authorize the transaction. After successful authorization, the transaction is immediately captured.</li>
+<li><code>Authorize</code>: Authorize the transaction</li>
+</ol>
+<h3 id='step-2-capture-or-void'>Step 2: Capture or Void</h3>
+<p>In case of a successful payment with the intent <code>sale</code>, this step does not apply.</p>
+
+<p>If the transaction was only authorized:</p>
+
+<ul>
+<li><p>If the merchant is comfortable with the sale and can fulfill the customer&#39;s needs, then the merchant will <code>Capture</code> the payment, thus finalizing the transaction, and the funds will transfer to the merchant.<br/><br/></p></li>
+<li><p>If for whatever reason, the merchant is not able to fulfill the needs of the customer, then the merchant can <code>Void</code> the transaction. This is the simplest way to cancel a payment. Voiding a payment removes the hold on the funds, and returns them to the customer. The payment is now canceled, and there are no further actions to take.</p></li>
+</ul>
+<h3 id='step-3-refund'>Step 3: Refund</h3>
+<p>If a customer changes their mind, or something goes wrong, and the transaction needs to be canceled after capture: a refund is processed. A refund returns the funds to the customer and reverses the sale.</p>
+<h2 id='create-payment'>Create payment</h2>
+<blockquote>
+<p>Authorize a transaction using full card number </p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/payment <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "intent":"authorize"
+    ,"payer":{
+        "payment_type":"CC"
+        ,"funding_instrument":{
+            "credit_card":{
+                "number":"4111111111111111"
+                ,"expire_month":12
+                ,"expire_year":2020
+                ,"cvv2":"123"
+                ,"first_name":"John"
+                ,"last_name":"Smith"
+                ,"billing_address":{
+                    "line1":"18 Test street"
+                    ,"city":"london"
+                    ,"country_code":"GB"
+                    ,"postal_code":"W1C"
+                    ,"state":""
+                    ,"phone":{
+                        "country_code":"+44"
+                        ,"number":"0988739990"
+                    }
+                }
+            }
+        }
+        ,"payer_info":{
+            "email":"john.smith@gmail.com"
+        }
+    }
+    ,"payee":{
+        "email":"mail@merchantdomain.com"
+        ,"merchant_id":"w3z8dfhkzvfq0j9n"
+    }
+    ,"transaction":{
+        "amount":{
+            "currency":"USD"
+            ,"total":"169.99"
+            ,"details":{
+                "subtotal":"159.99"
+                ,"shipping":"10"
+            }
+        }
+        ,"description":"purchase"
+        ,"items":[
+            {"sku":"100299S"
+            ,"name":"Ultrawatch"
+            ,"description":"Smart watch"
+            ,"quantity":"1"
+            ,"price":"85.99"
+            ,"shipping":"4"
+            ,"currency":"USD"
+            ,"url":""
+            ,"image":""
+            ,"tangible":"true"
+            },
+            {"sku":"100269S"
+            ,"name":"Drone"
+            ,"description":"drone x"
+            ,"quantity":"2"
+            ,"price":"37"
+            ,"shipping":"3"
+            ,"currency":"USD"
+            ,"url":""
+            ,"image":""
+            ,"tangible":"true"
+            }
+            ]
+        ,"shipping_address":{
+            "recipient_name":"Tom Hanks"
+        }
+        ,"soft_descriptor":{
+            "text":"test.com"
+        }
+        ,"invoice_number":"123455"
+    }
+    ,"custom":{
+        "field1":"this is a test"
+    }
+}'</span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"intent"</span><span class="p">:</span> <span class="s2">"authorize"</span><span class="p">,</span>
+  <span class="s2">"payer"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"payment_type"</span><span class="p">:</span> <span class="s2">"CC"</span><span class="p">,</span>
+    <span class="s2">"funding_instrument"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"credit_card"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"number"</span><span class="p">:</span> <span class="s2">"4111111111111111"</span><span class="p">,</span>
+        <span class="s2">"expire_month"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">"expire_year"</span><span class="p">:</span> <span class="mi">2020</span><span class="p">,</span>
+        <span class="s2">"cvv2"</span><span class="p">:</span> <span class="s2">"123"</span><span class="p">,</span>
+        <span class="s2">"first_name"</span><span class="p">:</span> <span class="s2">"John"</span><span class="p">,</span>
+        <span class="s2">"last_name"</span><span class="p">:</span> <span class="s2">"Smith"</span><span class="p">,</span>
+        <span class="s2">"billing_address"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"line1"</span><span class="p">:</span> <span class="s2">"18 Test street"</span><span class="p">,</span>
+          <span class="s2">"city"</span><span class="p">:</span> <span class="s2">"london"</span><span class="p">,</span>
+          <span class="s2">"country_code"</span><span class="p">:</span> <span class="s2">"GB"</span><span class="p">,</span>
+          <span class="s2">"postal_code"</span><span class="p">:</span> <span class="s2">"W1C"</span><span class="p">,</span>
+          <span class="s2">"state"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+          <span class="s2">"phone"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"country_code"</span><span class="p">:</span> <span class="s2">"+44"</span><span class="p">,</span>
+            <span class="s2">"number"</span><span class="p">:</span> <span class="s2">"0988739990"</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"payer_info"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"john.smith@gmail.com"</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">"payee"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"mail@merchantdomain.com"</span><span class="p">,</span>
+    <span class="s2">"merchant_id"</span><span class="p">:</span> <span class="s2">"w3z8dfhkzvfq0j9n"</span>
+  <span class="p">},</span>
+  <span class="s2">"transaction"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"amount"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="s2">"total"</span><span class="p">:</span> <span class="s2">"169.99"</span><span class="p">,</span>
+      <span class="s2">"details"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"subtotal"</span><span class="p">:</span> <span class="s2">"159.99"</span><span class="p">,</span>
+        <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"10"</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"purchase"</span><span class="p">,</span>
+    <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">"sku"</span><span class="p">:</span> <span class="s2">"100299S"</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ultrawatch"</span><span class="p">,</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Smart watch"</span><span class="p">,</span>
+        <span class="s2">"quantity"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+        <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"85.99"</span><span class="p">,</span>
+        <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"4"</span><span class="p">,</span>
+        <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+        <span class="s2">"url"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="s2">"image"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="s2">"tangible"</span><span class="p">:</span> <span class="s2">"true"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="s2">"sku"</span><span class="p">:</span> <span class="s2">"100269S"</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Drone"</span><span class="p">,</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"drone x"</span><span class="p">,</span>
+        <span class="s2">"quantity"</span><span class="p">:</span> <span class="s2">"2"</span><span class="p">,</span>
+        <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"37"</span><span class="p">,</span>
+        <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"3"</span><span class="p">,</span>
+        <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+        <span class="s2">"url"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="s2">"image"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="s2">"tangible"</span><span class="p">:</span> <span class="s2">"true"</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">"shipping_address"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"recipient_name"</span><span class="p">:</span> <span class="s2">"Tom Hanks"</span>
+    <span class="p">},</span>
+    <span class="s2">"soft_descriptor"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"test.com"</span>
+    <span class="p">},</span>
+    <span class="s2">"invoice_number"</span><span class="p">:</span> <span class="s2">"123455"</span>
+  <span class="p">},</span>
+  <span class="s2">"custom"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"field1"</span><span class="p">:</span> <span class="s2">"this is a test"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/payment"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+
+</code></pre>
+<blockquote>
+<p>Authorize a transaction using credit card nonce</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/payment <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "intent":"authorize"
+    ,"payer":{
+        "payment_type":"CC"
+        ,"funding_instrument":{
+            "credit_card_nonce":{
+                "nonce":"0080e4d1-02f5-49ad-9462-444de2cdf8c9"
+                ,"first_name":"John"
+                ,"last_name":"Smith"
+                ,"billing_address":{
+                    "line1":"18 Test street"
+                    ,"city":"london"
+                    ,"country_code":"GB"
+                    ,"postal_code":"W1C"
+                    ,"state":""
+                    ,"phone":{
+                        "country_code":"+44"
+                        ,"number":"0988739990"
+                    }
+                }
+            }
+        }
+        ,"payer_info":{
+            "email":"john.smith@gmail.com"
+        }
+    }
+    ,"transaction":{
+        "amount":{
+            "currency":"USD"
+            ,"total":"169.99"
+        }
+        ,"description":"purchase"       
+        ,"invoice_number":"123455"
+    }
+}'</span>
+
+</code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"intent"</span><span class="p">:</span> <span class="s2">"authorize"</span><span class="p">,</span>
+  <span class="s2">"payer"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"payment_type"</span><span class="p">:</span> <span class="s2">"CC"</span><span class="p">,</span>
+    <span class="s2">"funding_instrument"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"credit_card"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"credit_card_nonce"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"nonce"</span><span class="p">:</span> <span class="s2">"0080e4d1-02f5-49ad-9462-444de2cdf8c9"</span><span class="p">,</span>
+        <span class="s2">"first_name"</span><span class="p">:</span> <span class="s2">"John"</span><span class="p">,</span>
+        <span class="s2">"last_name"</span><span class="p">:</span> <span class="s2">"Smith"</span><span class="p">,</span>
+        <span class="s2">"billing_address"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"line1"</span><span class="p">:</span> <span class="s2">"18 Test street"</span><span class="p">,</span>
+          <span class="s2">"city"</span><span class="p">:</span> <span class="s2">"london"</span><span class="p">,</span>
+          <span class="s2">"country_code"</span><span class="p">:</span> <span class="s2">"GB"</span><span class="p">,</span>
+          <span class="s2">"postal_code"</span><span class="p">:</span> <span class="s2">"W1C"</span><span class="p">,</span>
+          <span class="s2">"state"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+          <span class="s2">"phone"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"country_code"</span><span class="p">:</span> <span class="s2">"+44"</span><span class="p">,</span>
+            <span class="s2">"number"</span><span class="p">:</span> <span class="s2">"0988739990"</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"payer_info"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"john.smith@gmail.com"</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">"transaction"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"amount"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="s2">"total"</span><span class="p">:</span> <span class="s2">"169.99"</span>
+    <span class="p">},</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"purchase"</span><span class="p">,</span>    
+    <span class="s2">"invoice_number"</span><span class="p">:</span> <span class="s2">"123455"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"/v1/merchants/w3z8dfhkzvfq0j9n/payment"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+
+</code></pre>
+<aside class="notice">
+`POST` /v1/merchants/`<merchant_id>`/payment
+</aside>
+
+<p>Creates a sale or an authorizad payment to be captured later. To create a sale, or authorization, include the payment details in the JSON request body. Set the intent to sale or authorize</p>
+
+<p>Include payer and transaction details. The combination of <code>payment_method</code> and <code>funding_instrument</code> determines the type of payment that is created. </p>
+<h3 id='header-parameters'>Header parameters</h3>
+<p>The request require a <code>Basic</code> authentication in the header. For more information about HTTP request headers, see <a href="#http-request-header">HTTP request headers.</a> </p>
+<h3 id='request-body'>Request body</h3>
+<ul>
+<li><h4 id='intent-enum-required'><em>intent</em> <code>enum</code> <span style="color:orange;">required</span></h4>
+<p>The payment intent. Value is:</p>
+
+<ul>
+<li><code>sale</code>. Makes an immediate payment.</li>
+<li><code>authorize</code>. Authorizes a payment for capture later</li>
+</ul>
+
+<p>Allowed values: <code>sale</code>, <code>authorize</code>.</p></li>
+<li><h4 id='payer-object-required'><em>payer</em> <code>object</code> <span style="color:orange;">required</span></h4>
+<p>The source of the funds for this payment. </p></li>
+<li><h4 id='transaction-object-required'><em>transaction</em> <code>object</code> <span style="color:orange;">required</span></h4>
+<p>Defines what the payment is for and who fulfills the payment. </p></li>
+<li><h4 id='custom-custom-object'><em>custom</em> custom <code>object</code></h4>
+<p>Free-form field for the use of clients</p></li>
+<li><h4 id='payee-object'><em>payee</em> <code>object</code></h4>
+<p>The payee who receives the funds and fulfills the order.</p></li>
+</ul>
+<h4 id='payer'>Payer</h4>
+<ul>
+<li><h5 id='payment_type-enum-required'><em>payment_type</em> <code>enum</code> <span style="color:orange;">required</span></h5>
+<p>Payment type being used. Value is:</p>
+
+<ul>
+<li><code>CC</code> : Credit card </li>
+<li><del><code>LP</code> : Local Payment</del></li>
+</ul></li>
+<li><h5 id='payer_info-object-required'><em>payer_info</em> <code>object</code> <span style="color:orange;">required</span></h5>
+<p>Information related to the Payer. </p></li>
+<li><h5 id='funding_instrument-object-required'><em>funding_instrument</em> <code>object</code> <span style="color:orange;">required</span></h5>
+<p>Funding instrument to be used to fund the payment. The object  must include either a credit_card or credit_card_token or credit_card_nonce object. If the array contains more than one instrument, the payment is declined.</p></li>
+</ul>
+<h4 id='payer_info'>payer_info</h4>
+<ul>
+<li><h5 id='email-string-required'><em>email</em> <code>string</code> <span style="color:orange;">required</span></h5>
+<p>Email address representing the payer. 127 characters max.</p></li>
+<li><h5 id='ip-string-optional'><em>ip</em> <code>string</code> <span style="color:lightblue;">optional</span></h5>
+<p>IP Address of the payer</p></li>
+<li><h5 id='name-string-optional'><em>name</em> <code>string</code> <span style="color:lightblue;">optional</span></h5>
+<p>Full Name of the payer  </p></li>
+<li><h5 id='birth_datestring'><em>birth_date</em><code>string</code></h5>
+<p>Birth date of the Payer in ISO8601 format (yyyy-mm-dd).</p></li>
+</ul>
+<h4 id='funding_instrument'>funding_instrument</h4>
+<p>Only one of the object described below is <span style="color:orange;">required</span>:</p>
+
+<ul>
+<li><h5 id='credit_card-object'><em>credit_card</em> <code>object</code></h5>
+<p>The credit card details. You can use this instrument to fund a payment. </p></li>
+<li><h5 id='credit_card_nonce-object'><em>credit_card_nonce</em> <code>object</code></h5>
+<p>The tokenized credit card details. You can use this instrument to fund only one payment .</p></li>
+<li><h5 id='credit_card_token-object'><del><em>credit_card_token</em> <code>object</code></del></h5>
+<p>The tokenized credit card details. You can use this instrument to fund a payment.</p></li>
+</ul>
+<h4 id='credit_card'>credit_card</h4>
+<ul>
+<li><h5 id='number-string-required'>number <code>string</code> <span style="color:orange;">required</span>:</h5>
+<p>The credit card number. Value is numeric characters only with no spaces or punctuation. Must conform to the modulo and length required by each credit card type. </p></li>
+<li><h5 id='expire_month-integer-required'>expire_month <code>integer</code> <span style="color:orange;">required</span></h5>
+<p>The expiration month with no leading zero. Value is from <code>1</code> to <code>12</code>.</p></li>
+<li><h5 id='expire_year-integer-required'>expire_year <code>integer</code> <span style="color:orange;">required</span></h5>
+<p>The four-digit expiration year.</p></li>
+<li><h5 id='cvv2-string'>cvv2 <code>string</code></h5>
+<p>The three- to four-digit card validation code.</p></li>
+<li><h5 id='name-string'>name <code>string</code></h5>
+<p>The card holder&#39;s name as displayed on the card.</p></li>
+<li><h5 id='billing_address-object-optional'>billing_address <code>object</code>  <span style="color:lightblue;">optional</span></h5>
+<p>The billing address for this card.</p></li>
+</ul>
+
+<p><br></p>
+<h4 id='credit_card_nonce'>credit_card_nonce</h4>
+<ul>
+<li><h5 id='nonce-string'>nonce <code>string</code></h5>
+<p>one time use tokenized credit card details</p></li>
+<li><h5 id='name-string-2'>name <code>string</code></h5>
+<p>The card holder&#39;s name as displayed on the card.</p></li>
+<li><h5 id='billing_address-object-optional-2'>billing_address <code>object</code>  <span style="color:lightblue;">optional</span></h5>
+<p>The billing address for this card.</p></li>
+</ul>
+
+<p><br></p>
+<h4 id='credit_card_token'><del>credit_card_token</del></h4>
+<ul>
+<li><h5 id='credit_card_id-string'><del>credit_card_id <code>string</code></del></h5>
+<p><del>ID of credit card previously stored in vault</del></p></li>
+<li><h5 id='name-string-3'><del>name <code>string</code></del></h5>
+<p><del>The card holder&#39;s name as displayed on the card.</del></p></li>
+<li><h5 id='cvv2-string-2'>cvv2 <code>string</code></h5>
+<p><del>The three- to four-digit card validation code.</del></p></li>
+<li><h5 id='billing_address-object-optional-3'><del>billing_address <code>object</code>  <span style="color:lightblue;">optional</span></del></h5>
+<p><del>The billing address for this card.</del></p></li>
+</ul>
+<h4 id='billing_address'>billing_address</h4>
+<ul>
+<li><h5 id='line1-string-required'>line1 <code>string</code>  <span style="color:orange;">required</span></h5>
+<p>The first line of the address. For example, number, street, and so on.</p>
+
+<p>Maximum length: 100.</p></li>
+<li><h5 id='line2-string'>line2 <code>string</code></h5>
+<p>The second line of the address. For example, suite or apartment number.</p>
+
+<p>Maximum length: 100.</p></li>
+<li><h5 id='city-string'>city <code>string</code></h5>
+<p>The city name.</p>
+
+<p>Maximum length: 64.</p></li>
+<li><h5 id='country_code-string-required'>country_code <code>string</code>  <span style="color:orange;">required</span></h5>
+<p>two-character ISO 3166-1 code that identifies the country or region.
+<strong>Note:</strong> The country code for Great Britain is <code>GB</code> and not <code>UK</code> as used in the top- level domain names for that country. </p>
+
+<p>Minimum length: 2.</p>
+
+<p>Maximum length: 2.</p>
+
+<p>Pattern: <code>^([A-Z]{2}|C2)$</code>.</p></li>
+<li><h5 id='postal_code-string'>postal_code <code>string</code></h5>
+<p>The postal code, which is the zip code or equivalent. </p></li>
+<li><h5 id='state-string'>state <code>string</code></h5>
+<p>2 letter code for US states, and the equivalent for other countries.</p></li>
+<li><h5 id='phone-object'>phone <code>object</code></h5>
+<p>Information related phone number.</p></li>
+</ul>
+<h4 id='phone'>phone</h4>
+<ul>
+<li><h5 id='country_code-string-required-2'>country_code <code>string</code>  <span style="color:orange;">required</span></h5>
+<p>Country code (from in E.164 format)</p></li>
+<li><h5 id='number'>number</h5>
+<p>In-country phone number (from in E.164 format). Maximum length is 25 characters.</p></li>
+</ul>
+<h4 id='transaction'>transaction</h4>
+<ul>
+<li><h5 id='amount-object-required'>amount <code>object</code> <span style="color:orange;">required</span></h5>
+<p>The amount to collect.</p></li>
+<li><h5 id='type-string'>type <code>string</code></h5>
+<p>Describe the transaction type. Possible value:</p>
+
+<ul>
+<li>1 : Regular</li>
+<li><del>2 : Subscription</del></li>
+<li>3 : MOTO</li>
+</ul>
+
+<p>Defaulted to 1 (regular) if not provided</p></li>
+<li><h5 id='modestring'>mode<code>string</code></h5>
+<p>Describe the transaction mode. Possible value:</p>
+
+<ul>
+<li>1 : Non 3D</li>
+<li><del>2 : 3D</del></li>
+<li><del>3 : Local payment</del></li>
+</ul>
+
+<p>Defaulted to 1 (regular) if not provided</p></li>
+<li><h5 id='description-string'>description <code>string</code></h5>
+<p>Description of what is being paid for.  </p></li>
+<li><h5 id='items-array-item'>items <code>array(item)</code></h5>
+<p>List of items being paid for.</p></li>
+<li><h5 id='shipping_address-object-39-required-39-if-billing-address-is-not-provided'>shipping_address <code>object</code> <span style="color:orange;">&#39;required&#39; if billing address is not provided</span></h5>
+<p>The shipping address.</p></li>
+<li><h5 id='shipping_method-string'>shipping_method <code>string</code></h5>
+<p>Shipping method used for this payment like USPSParcel etc.</p></li>
+<li><h5 id='notify_url-string'>notify_url <code>string</code></h5>
+<p>URL to send payment notifications(Maximum length: 2048.)</p></li>
+<li><h5 id='order_url-string'>order_url <code>string</code></h5>
+<p>Url on merchant site pertaining to this payment.(Maximum length: 2048.)</p></li>
+<li><h5 id='invoice_number-string'>invoice_number <code>string</code></h5>
+<p>invoice number to track this payment (Maximum length: 50.)</p></li>
+<li><h5 id='soft_descriptor-object'>soft_descriptor <code>object</code></h5>
+<p>Dynamic Soft descriptor used when charging this funding source.</p></li>
+</ul>
+<h4 id='amount'>amount</h4>
+<ul>
+<li><h5 id='currency-string-required'>currency <code>string</code> <span style="color:orange;">required</span></h5>
+<p>The <a href="#currency-codes">three-character ISO-4217 currency code</a>. </p></li>
+<li><h5 id='total-string-required'>total <code>string</code> <span style="color:orange;">required</span></h5>
+<p>The total amount charged to the payee by the payer. Maximum length is 10 characters, which includes:</p>
+
+<ul>
+<li>Seven digits before the decimal point.</li>
+<li>The decimal point.</li>
+<li>Two digits after the decimal point.</li>
+</ul></li>
+</ul>
+<h4 id='shipping_address'>shipping_address</h4>
+<ul>
+<li><h5 id='recipient_name-string'>recipient_name <code>string</code></h5>
+<p>Name of the recipient at this address.</p></li>
+<li><h5 id='line1-string-required-2'>line1 <code>string</code>  <span style="color:orange;">required</span></h5>
+<p>The first line of the address. For example, number, street, and so on.</p>
+
+<p>Maximum length: 100.</p></li>
+<li><h5 id='line2-string-2'>line2 <code>string</code></h5>
+<p>The second line of the address. For example, suite or apartment number.</p>
+
+<p>Maximum length: 100.</p></li>
+<li><h5 id='city-string-2'>city <code>string</code></h5>
+<p>The city name.</p>
+
+<p>Maximum length: 64.</p></li>
+<li><h5 id='country_code-string-required-3'>country_code <code>string</code>  <span style="color:orange;">required</span></h5>
+<p>two-character ISO 3166-1 code that identifies the country or region.</p>
+
+<p><strong>Note:</strong> The country code for Great Britain is <code>GB</code> and not <code>UK</code> as used in the top- level domain names for that country. </p>
+
+<p>Minimum length: 2.</p>
+
+<p>Maximum length: 2.</p>
+
+<p>Pattern: <code>^([A-Z]{2}|C2)$</code>.</p></li>
+<li><h5 id='postal_code-string-2'>postal_code <code>string</code></h5>
+<p>The postal code, which is the zip code or equivalent. </p></li>
+<li><h5 id='state-string-2'>state <code>string</code></h5>
+<p>2 letter code for US states, and the equivalent for other countries.</p></li>
+<li><h5 id='phone-object-2'>phone <code>object</code></h5>
+<p>Information related phone number.</p></li>
+</ul>
+<h4 id='soft_descriptor'>soft_descriptor</h4>
+<ul>
+<li><h5 id='text-string'>text <code>string</code></h5>
+<p>The soft descriptor text to use to charge this funding source. If greater than the maximum allowed length, the API truncates the string.</p>
+
+<p>Maximum length: 22.</p></li>
+<li><h5 id='city-string-3'><del>city <code>string</code></del></h5>
+<p><del>The soft descriptor city to use to charge this funding source.</del></p></li>
+<li><h5 id='country-string'><del>country <code>string</code></del></h5>
+<p><del>The soft descriptor country to use to charge this funding source.</del></p>
+
+<p><del>two-character ISO 3166-1 code that identifies the country or region.</del></p></li>
+</ul>
+<h4 id='item'>item</h4>
+<ul>
+<li><h5 id='sku-string'>sku <code>string</code></h5>
+<p>The stock keeping unit (SKU) for the item.</p></li>
+<li><h5 id='name-string-4'>name <code>string</code></h5>
+<p>The item name. If this value is greater than the maximum allowed length, the API truncates the string.</p></li>
+<li><h5 id='description-string-2'>description <code>string</code></h5>
+<p>The item description.</p></li>
+<li><h5 id='quantity-string'>quantity <code>string</code></h5>
+<p>The item quantity. Must be a whole number.
+Maximum length: 10.</p>
+
+<p>Pattern: <code>^[0-9]{0,10}$</code>.</p></li>
+<li><h5 id='price-string'>price <code>string</code></h5>
+<p>The item cost. Supports two decimal places.
+Pattern: <code>^[0-9]{0,10}(\.[0-9]{0,2})?$</code></p></li>
+<li><h5 id='shipping-string'>shipping <code>string</code></h5>
+<p>The shipping cost</p></li>
+<li><h5 id='currency-string'>currency <code>string</code></h5>
+<p>The three-character ISO-4217 currency code that identifies the currency.</p></li>
+<li><h5 id='image-string'>image <code>string</code></h5>
+<p>URI to an image representing the item</p></li>
+<li><h5 id='tangible-bool'>tangible <code>bool</code></h5>
+<p>Identifies if the item is a tangible or not</p></li>
+<li><h5 id='id-string'>id <code>string</code></h5>
+<p>Unique id</p></li>
+</ul>
+<h4 id='custom'>custom</h4>
+<ul>
+<li><h5 id='field1-string'>field1 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field2-string'>field2 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field3-string'>field3 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field4-string'>field4 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field5-string'>field5 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field6-string'>field6 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field7-string'>field7 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field8-string'>field8 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field9-string'>field9 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+<li><h5 id='field10-string'>field10 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100</p></li>
+</ul>
+<h3 id='response-body'>Response body</h3>
+<aside class="notice">
+Successful authorizaton request will return a message with either a 10000 response code ~~or a 10100 response code for flagged transactions~~
+</aside>
+
+<blockquote>
+<p>Response for the above request
+```json</p>
+</blockquote>
+<pre class="highlight plaintext"><code>
+
+### Understanding the response
+
+By looking at the status, responseMessage and responseCode fields in the payment response you can find out why the payment has not gone through. It's possible the payment has an invalid or expired card or a valid card with an insufficient available balance.
+
+The following pages can be used as references when understanding the response message:
+
+
+</code></pre><h2 id='void-authorization'>Void authorization</h2>
+<p>Voids, or cancels, an authorization, by ID. You cannot void a fully captured authorization.</p>
+
+<p>For credit cards and some  alternative payment methods, the payment is completed in two steps:
+1. Authorization – The payment details of the shopper are verified, and the funds are reserved.
+2. Capture –  The reserved funds are transferred from the shopper to your account.</p>
+
+<p>When the payment has been authorised but not yet captured, you can cancel the authorisation hold on the payment. </p>
+
+<aside class="notice">
+Cancelling a payment can either be done in the Merchant Dashboard or using the folloing API request.
+</aside>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/authorization/W94Q5DF2NWIRD71XYUI8/void <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "invoice_number":"123456",
+    "items":[
+            {
+                "sku":"100299S"
+                ,"name":"Ultrawatch"
+                ,"description":"Smart watch"
+                ,"quantity":"1"
+                ,"price":"110.00"
+                ,"shipping":"20"
+                ,"currency":"USD"
+                ,"url":""
+                ,"image":""
+                ,"tangible":"true"
+            }
+        ],
+    "custom":{
+        "field1":"this is a test"
+    }
+}
+
+
+</span></code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"invoice_number"</span><span class="p">:</span> <span class="s2">"123456"</span><span class="p">,</span>
+  <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"sku"</span><span class="p">:</span> <span class="s2">"100299S"</span><span class="p">,</span>
+      <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ultrawatch"</span><span class="p">,</span>
+      <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Smart watch"</span><span class="p">,</span>
+      <span class="s2">"quantity"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+      <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"110.00"</span><span class="p">,</span>
+      <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"20"</span><span class="p">,</span>
+      <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="s2">"url"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"image"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"tangible"</span><span class="p">:</span> <span class="s2">"true"</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">"custom"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"field1"</span><span class="p">:</span> <span class="s2">"this is a test"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/authorization/W94Q5DF2NWIRD71XYUI8/void"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<aside class="notice">
+`POST` /v1/merchants/authorization/{authorization_id}/void
+</aside>
+<h3 id='path-parameters'>Path parameters</h3>
+<ul>
+<li><h4 id='authorization_id-string-required'>authorization_id <code>string</code> <span style="color:orange;">required</span></h4>
+<p>The ID of the authorization to void.</p></li>
+</ul>
+<h3 id='request-body'>Request body</h3>
+<ul>
+<li><h4 id='invoice_number-string'>invoice_number <code>string</code></h4>
+<p>The invoice number to track this payment.</p></li>
+<li><h4 id='items-array-item'>items <code>array(item)</code></h4>
+<p>List of items being paid for.</p></li>
+<li><h4 id='custom-object'>custom <code>object</code></h4></li>
+<li><h5 id='field1-string'>field1 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100 ...</p></li>
+</ul>
+<h3 id='response-body'>Response body</h3>
+<aside class="notice">
+Amount is not specified as a void will always void the full amount authorized
+
+Successful void request will return a message with response code 10000 
+</aside>
+
+<blockquote>
+<p>Response for the above request</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="w">
+
+</span></code></pre><h2 id='capture-payment'>Capture payment</h2>
+<p>When a payment is authorized, the funds are held on the customer&#39;s card for seven days. The merchant can either directly capture a payment on its dashboard or by using this API. The transaction is canceled if the merchant doesn&#39;t capture the authorization within seven days. Authorized payments can be captured either in full or partially.</p>
+
+<aside class="notice">
+Note that is the intent is set to sale while creating the payment, the authorized payment is automatically capture in full.
+</aside>
+
+<p>Any capture amount less than the original transaction will be treated as a partial capture.</p>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/authorization/W94Q5DF2NWIRD71XYUI8/capture <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "amount": "110.00",
+    "invoice_number":"123456",
+    "items":[
+            {
+                "sku":"100299S"
+                ,"name":"Ultrawatch"
+                ,"description":"Smart watch"
+                ,"quantity":"1"
+                ,"price":"110.00"
+                ,"shipping":"20"
+                ,"currency":"USD"
+                ,"url":""
+                ,"image":""
+                ,"tangible":"true"
+            }
+        ],
+    "custom":{
+        "field1":"this is a test"
+    }
+}
+
+</span></code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"amount"</span><span class="p">:</span> <span class="s2">"110.00"</span><span class="p">,</span>
+  <span class="s2">"invoice_number"</span><span class="p">:</span> <span class="s2">"123456"</span><span class="p">,</span>
+  <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"sku"</span><span class="p">:</span> <span class="s2">"100299S"</span><span class="p">,</span>
+      <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ultrawatch"</span><span class="p">,</span>
+      <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Smart watch"</span><span class="p">,</span>
+      <span class="s2">"quantity"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+      <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"110.00"</span><span class="p">,</span>
+      <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"20"</span><span class="p">,</span>
+      <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="s2">"url"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"image"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"tangible"</span><span class="p">:</span> <span class="s2">"true"</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">"custom"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"field1"</span><span class="p">:</span> <span class="s2">"this is a test"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/authorization/W94Q5DF2NWIRD71XYUI8/capture"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<aside class="notice">
+`POST` /v1/merchants/authorization/{authorization_id}/capture
+</aside>
+<h3 id='path-parameters'>Path parameters</h3>
+<ul>
+<li><h4 id='authorization_id-string-required'>authorization_id <code>string</code> <span style="color:orange;">required</span></h4>
+<p>The ID of the authorization to capture.</p></li>
+</ul>
+<h3 id='request-body'>Request body</h3>
+<ul>
+<li><h4 id='amount-string'>amount <code>string</code></h4>
+<p>The amount to capture. If not specified, the amount authorized is captured in full. If specified, the amount should be less or equal the originally authorized amount. The currency used for this capture, is the same as the one used for authorization</p></li>
+<li><h4 id='invoice_number-string'>invoice_number <code>string</code></h4>
+<p>The invoice number to track this payment.</p></li>
+<li><h4 id='items-array-item'>items <code>array(item)</code></h4>
+<p>List of items being paid for.</p></li>
+<li><h4 id='custom-object'>custom <code>object</code></h4></li>
+<li><h5 id='field1-string'>field1 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100 ...</p></li>
+</ul>
+<h3 id='response-body'>Response body</h3>
+<aside class="notice">
+Successful capture request will return a message with response code 10000 
+</aside>
+
+<blockquote>
+<p>Response for the above request</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="w">
+
+</span></code></pre><h2 id='refund-payments'>Refund payments</h2>
+<p>A <em>sale</em> is a completed payment.
+A <em>captured payment</em> is an authorized and captured payment.
+You can refund sales and captured payments.</p>
+
+<p>There are two types of refunds you might need to process:</p>
+
+<ol>
+<li><p><strong>Full refund</strong>
+A full refund returns the total amount of the transaction to the customer — it can only be performed once.</p></li>
+<li><p><strong>Partial refund</strong>
+A partial refund returns a sum less than the captured amount. A payment can be refunded multiple times, but cannot exceed the original payment amount.</p></li>
+</ol>
+
+<aside class="notice">
+Refunds can be made in via the Dashboard or by using this API endpoint . Once processed, it is not possible to cancel a refund.
+</aside>
+
+<p>Any refunds for less than the original captured amount will be considered partial refunds.</p>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/capture/W94Q5D31NWIRD90XYUI8/refund <span class="se">\</span>
+  -H <span class="s1">'authorization: Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6'</span> <span class="se">\</span>
+  -H <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "amount": "110.00",
+    "invoice_number":"123456",
+    "items":[
+            {
+                "sku":"100299S"
+                ,"name":"Ultrawatch"
+                ,"description":"Smart watch"
+                ,"quantity":"1"
+                ,"price":"110.00"
+                ,"shipping":"20"
+                ,"currency":"USD"
+                ,"url":""
+                ,"image":""
+                ,"tangible":"true"
+            }
+        ],
+    "custom":{
+        "field1":"this is a test"
+    }
+}
+
+</span></code></pre><pre class="highlight javascript tab-javascript"><code>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"amount"</span><span class="p">:</span> <span class="s2">"110.00"</span><span class="p">,</span>
+  <span class="s2">"invoice_number"</span><span class="p">:</span> <span class="s2">"123456"</span><span class="p">,</span>
+  <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"sku"</span><span class="p">:</span> <span class="s2">"100299S"</span><span class="p">,</span>
+      <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ultrawatch"</span><span class="p">,</span>
+      <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Smart watch"</span><span class="p">,</span>
+      <span class="s2">"quantity"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+      <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"110.00"</span><span class="p">,</span>
+      <span class="s2">"shipping"</span><span class="p">:</span> <span class="s2">"20"</span><span class="p">,</span>
+      <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="s2">"url"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"image"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+      <span class="s2">"tangible"</span><span class="p">:</span> <span class="s2">"true"</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">"custom"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"field1"</span><span class="p">:</span> <span class="s2">"this is a test"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://api.nazim.io/v1/merchants/w3z8dfhkzvfq0j9n/capture/W94Q5D31NWIRD90XYUI8/refund"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"authorization"</span><span class="p">,</span> <span class="s2">"Basic ODZidWQ0Y2JremlxOXZmYzoweHI1ZDkwOHo2bmo4a2h6"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<aside class="notice">
+`POST` /v1/merchants/capture/{capture_id}/refund
+</aside>
+<h3 id='path-parameters'>Path parameters</h3>
+<ul>
+<li><h4 id='capture_id-string-required'>capture_id <code>string</code> <span style="color:orange;">required</span></h4>
+<p>The ID of the captured payment to refund.</p></li>
+</ul>
+<h3 id='request-body'>Request body</h3>
+<ul>
+<li><h4 id='amount-string'>amount <code>string</code></h4>
+<p>The refund amount. If not specified, the amount captured is refunded in full. If specified, the amount should be less or equal the originally captured amount. The currency used for this refund, is the same as the one used for authorization</p></li>
+<li><h4 id='invoice_number-string'>invoice_number <code>string</code></h4>
+<p>The invoice number to track this payment.</p></li>
+<li><h4 id='items-array-item'>items <code>array(item)</code></h4>
+<p>List of items being paid for.</p></li>
+<li><h4 id='custom-object'>custom <code>object</code></h4>
+<ul>
+<li><h5 id='field1-string'>field1 <code>string</code></h5>
+<p>free-form field for the use of clients. maximum length of 100 ...</p></li>
+</ul></li>
+</ul>
+<h3 id='response-body'>Response body</h3>
+<aside class="notice">
+Successful refund request will return a message with either a 10000 response code ~~or a 10100 response code for flagged transactions~~
+</aside>
+
+<blockquote>
+<p>Response for the above request</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="w">
+
+</span></code></pre><h1 id='response-code'>Response Code</h1>
+<table><thead>
+<tr>
+<th><strong>Response Code</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Long Description</strong></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>10000</td>
+<td>Approved</td>
+<td>Approved</td>
+</tr>
+<tr>
+<td>10008</td>
+<td>Approved - Honour with ID (Debit Cards)</td>
+<td>Approved - Honour with ID (Debit Cards)</td>
+</tr>
+<tr>
+<td>10011</td>
+<td>Approved - VIP (not used)</td>
+<td>Approved - VIP (not used)</td>
+</tr>
+<tr>
+<td>10076</td>
+<td>Approved (Country Club)</td>
+<td>Approved (Country Club)</td>
+</tr>
+<tr>
+<td>10077</td>
+<td>Approved (Local Banks)</td>
+<td>Approved (Local Banks)</td>
+</tr>
+<tr>
+<td>10081</td>
+<td>Approved (Approved Commercial)</td>
+<td>Approved (Approved Commercial)</td>
+</tr>
+<tr>
+<td>10100</td>
+<td>Approved - Risk Flagged</td>
+<td>Approved - Risk Flagged</td>
+</tr>
+<tr>
+<td>20001</td>
+<td>Refer to Card Issuer</td>
+<td>The customer?s issuing bank has prevented the transaction from being authorised</td>
+</tr>
+<tr>
+<td>20002</td>
+<td>Refer to Card Issuer - Special Conditions</td>
+<td>Might be due to exceeded limit or activity</td>
+</tr>
+<tr>
+<td>20003</td>
+<td>Invalid Merchant, or Merchant is not active</td>
+<td>Invalid Merchant, or Merchant is not active</td>
+</tr>
+<tr>
+<td>20005</td>
+<td>Declined - Do Not Honour</td>
+<td>The customer?s issuing bank is preventing the transaction from being authorised, and instructing you not to honor the card.</td>
+</tr>
+<tr>
+<td>20006</td>
+<td>Error / Invalid Request Parameters</td>
+<td>Error / Invalid Request Parameters</td>
+</tr>
+<tr>
+<td>20009</td>
+<td>Request in Progress</td>
+<td>Request in Progress</td>
+</tr>
+<tr>
+<td>20010</td>
+<td>Partial Value Approved</td>
+<td>Partial Value Approved</td>
+</tr>
+<tr>
+<td>20012</td>
+<td>Invalid Transaction</td>
+<td>The transaction being attempted is invalid-- for example you are trying to issue a credit against a credit transaction (refunding a refund) or posting a refund more than terminal limit</td>
+</tr>
+<tr>
+<td>20013</td>
+<td>Invalid Value/Amount</td>
+<td>If payment transaction value is non-integer, negative, zero, or below the minimum permitted value</td>
+</tr>
+<tr>
+<td>20014</td>
+<td>Invalid Card Number</td>
+<td>If credit card number contains characters other digits, or bank does not recognize this number as a valid credit card number</td>
+</tr>
+<tr>
+<td>20017</td>
+<td>Customer Cancellation</td>
+<td>Customer Cancellation</td>
+</tr>
+<tr>
+<td>20018</td>
+<td>Customer Dispute</td>
+<td>Customer Dispute</td>
+</tr>
+<tr>
+<td>20019</td>
+<td>Re-enter Transaction or Transaction has been expired</td>
+<td>An unknown error occurred during the authorisation process or the transaction has been expired</td>
+</tr>
+<tr>
+<td>20020</td>
+<td>Invalid Response</td>
+<td>Invalid Response</td>
+</tr>
+<tr>
+<td>20021</td>
+<td>No Action Taken</td>
+<td>Invalid Action Type</td>
+</tr>
+<tr>
+<td>20022</td>
+<td>Suspected Malfunction</td>
+<td>Suspected Malfunction</td>
+</tr>
+<tr>
+<td>20023</td>
+<td>Unacceptable Transaction Fee</td>
+<td>Unacceptable Transaction Fee</td>
+</tr>
+<tr>
+<td>20025</td>
+<td>Unable to Locate Record on File</td>
+<td>Unable to Locate Record on File</td>
+</tr>
+<tr>
+<td>20026</td>
+<td>Duplicate File Update Record</td>
+<td>Duplicate File Update Record</td>
+</tr>
+<tr>
+<td>20027</td>
+<td>File Update Field Edit Error</td>
+<td>A temporary error occurred during the authorisation process</td>
+</tr>
+<tr>
+<td>20028</td>
+<td>File Update File Locked Out</td>
+<td>A temporary error occurred during the authorisation process</td>
+</tr>
+<tr>
+<td>20029</td>
+<td>File update not successful</td>
+<td>A temporary error occurred during the authorisation process</td>
+</tr>
+<tr>
+<td>20030</td>
+<td>Format Error</td>
+<td>Format Error</td>
+</tr>
+<tr>
+<td>20031</td>
+<td>Bank not Supported by Switch</td>
+<td>Bank not Supported by Switch</td>
+</tr>
+<tr>
+<td>20032</td>
+<td>Completed Partially</td>
+<td>Completed Partially</td>
+</tr>
+<tr>
+<td>20038</td>
+<td>Allowable PIN Tries Exceeded</td>
+<td>Allowable PIN Tries Exceeded</td>
+</tr>
+<tr>
+<td>20039</td>
+<td>No CREDIT Account</td>
+<td>No CREDIT Account</td>
+</tr>
+<tr>
+<td>20040</td>
+<td>Requested Function not Supported</td>
+<td>Requested Function not Supported</td>
+</tr>
+<tr>
+<td>20042</td>
+<td>No Universal Value/Amount</td>
+<td>No Universal Value/Amount</td>
+</tr>
+<tr>
+<td>20044</td>
+<td>No Investment Account</td>
+<td>No Investment Account</td>
+</tr>
+<tr>
+<td>20046</td>
+<td>Bank Decline</td>
+<td>The transaction may be declined due to a high level of recent activity on a card, a lack of matching AVS information, a card being over its limit, or a range of other reasons which only the bank knows.</td>
+</tr>
+<tr>
+<td>20051</td>
+<td>Insufficient Funds</td>
+<td>The customer?s issuing bank is preventing the transaction from being authorised because your customer is over his/her credit limit for the card (or processing the attempted transaction would cause the customer to go over the limit)</td>
+</tr>
+<tr>
+<td>20052</td>
+<td>No Cheque Account</td>
+<td>No Cheque Account</td>
+</tr>
+<tr>
+<td>20053</td>
+<td>No Savings Account</td>
+<td>No Savings Account</td>
+</tr>
+<tr>
+<td>20054</td>
+<td>Expired Card</td>
+<td>The expiration date entered for the credit card is in the past</td>
+</tr>
+<tr>
+<td>20055</td>
+<td>Incorrect PIN</td>
+<td>Incorrect PIN</td>
+</tr>
+<tr>
+<td>20056</td>
+<td>No Card Record</td>
+<td>No Card Record</td>
+</tr>
+<tr>
+<td>20057</td>
+<td>Transaction not Permitted to Cardholder</td>
+<td>This code will appear if you are attempting a transaction and your customer?s card is not configured for that type of transaction</td>
+</tr>
+<tr>
+<td>20058</td>
+<td>Transaction not Permitted to Terminal</td>
+<td>This code will appear if you are attempting a transaction and your merchant processing account is not properly configured</td>
+</tr>
+<tr>
+<td>20059</td>
+<td>Suspected Fraud</td>
+<td>Suspected Fraud</td>
+</tr>
+<tr>
+<td>20060</td>
+<td>Card Acceptor Contact Acquirer</td>
+<td>Card Acceptor Contact Acquirer</td>
+</tr>
+<tr>
+<td>20061</td>
+<td>Exceeds Withdrawal Value/Amount Limits</td>
+<td>Exceeds Withdrawal Value/Amount Limits</td>
+</tr>
+<tr>
+<td>20062</td>
+<td>Restricted Card</td>
+<td>This code will appear for one of two reasons: 1. You are attempting an American Express or Discover transaction and your merchant processing account is not configured properly to accept it. 2. An online payment was attempted by your customer using a credit card that does not allow online payments</td>
+</tr>
+<tr>
+<td>20063</td>
+<td>Security Violation</td>
+<td>The three digit CVV2 code on the back of Visa/MasterCard/Discover cards, or the four digit CID code on the front of American Express cards is in an invalid format or is for some other configuration reason invalid.</td>
+</tr>
+<tr>
+<td>20064</td>
+<td>Original Value Incorrect</td>
+<td>Original Value Incorrect</td>
+</tr>
+<tr>
+<td>20065</td>
+<td>Exceeds Withdrawal Frequency Limit</td>
+<td>The customer?s issuing bank is preventing the transaction from being authorised because your customer is over his/her credit limit for the card (or processing the attempted transaction would cause the customer to go over the limit)</td>
+</tr>
+<tr>
+<td>20066</td>
+<td>Card Acceptor Call Acquirer Security</td>
+<td>Card Acceptor Call Acquirer Security</td>
+</tr>
+<tr>
+<td>20067</td>
+<td>Hard Capture - Pick Up Card at ATM</td>
+<td>Hard Capture - Pick Up Card at ATM</td>
+</tr>
+<tr>
+<td>20068</td>
+<td>Response Received Too Late / Timeout</td>
+<td>Response Received Too Late / Timeout</td>
+</tr>
+<tr>
+<td>20075</td>
+<td>Allowable PIN Tries Exceeded</td>
+<td>Allowable PIN Tries Exceeded</td>
+</tr>
+<tr>
+<td>20082</td>
+<td>No security model</td>
+<td>No security model, or authentication method not supported.</td>
+</tr>
+<tr>
+<td>20083</td>
+<td>No Account</td>
+<td>No Account</td>
+</tr>
+<tr>
+<td>20084</td>
+<td>No PBF</td>
+<td>No PBF</td>
+</tr>
+<tr>
+<td>20085</td>
+<td>PBF Update Error</td>
+<td>PBF Update Error</td>
+</tr>
+<tr>
+<td>20086</td>
+<td>ATM Malfunction / Invalid authorisation type</td>
+<td>ATM Malfunction / Invalid authorisation type</td>
+</tr>
+<tr>
+<td>20087</td>
+<td>Bad Track Data</td>
+<td>Bad Track Data</td>
+</tr>
+<tr>
+<td>20088</td>
+<td>Unable to Dispense/process</td>
+<td>Unable to Dispense/process</td>
+</tr>
+<tr>
+<td>20089</td>
+<td>Administration Error</td>
+<td>Transaction was completed successfully however we couldn&#39;t complete the administrative process, such as send an email to the customer</td>
+</tr>
+<tr>
+<td>20090</td>
+<td>Cut-Off in progress</td>
+<td>Cut-Off in progress</td>
+</tr>
+<tr>
+<td>20091</td>
+<td>Issuer or Switch is Inoperative</td>
+<td>A temporary error occurred communicating with the issuing bank during the authorisation process</td>
+</tr>
+<tr>
+<td>20092</td>
+<td>Financial Institution not Found</td>
+<td>Financial Institution not Found</td>
+</tr>
+<tr>
+<td>20093</td>
+<td>Transaction Cannot be Completed</td>
+<td>The customer?s issuing bank is preventing the transaction from being authorised because of some violation related to the account</td>
+</tr>
+<tr>
+<td>20094</td>
+<td>Duplicate Transmission/Invoice</td>
+<td>Action already been taken on this transaction</td>
+</tr>
+<tr>
+<td>20095</td>
+<td>Reconcile Error</td>
+<td>Reconcile Error</td>
+</tr>
+<tr>
+<td>20096</td>
+<td>System Malfunction</td>
+<td>A temporary error occurred communicating with the issuing bank during the authorisation process</td>
+</tr>
+<tr>
+<td>20098</td>
+<td>MAC Error</td>
+<td>Missing MAC/Track ID data, or incorrect</td>
+</tr>
+<tr>
+<td>20099</td>
+<td>Other / Unidentified responses</td>
+<td>Other / Unidentified responses</td>
+</tr>
+<tr>
+<td>200N0</td>
+<td>Unable to authorise</td>
+<td>Unable to authorise</td>
+</tr>
+<tr>
+<td>200O5</td>
+<td>Pin Required</td>
+<td>Pin Required</td>
+</tr>
+<tr>
+<td>200P1</td>
+<td>Over Daily Limit</td>
+<td>Over Daily Limit</td>
+</tr>
+<tr>
+<td>200P9</td>
+<td>Limit exceeded. Enter a lesser value.</td>
+<td>Limit exceeded. Enter a lesser value.</td>
+</tr>
+<tr>
+<td>200R1</td>
+<td>Issuer initiated a stop payment ( revocation order)  for this Authorization</td>
+<td>Issuer initiated a stop payment ( revocation order)  for this Authorization</td>
+</tr>
+<tr>
+<td>200R3</td>
+<td>Issuer initiated a stop payment ( revocation order)  for all transactions</td>
+<td>Issuer initiated a stop payment ( revocation order)  for all transactions</td>
+</tr>
+<tr>
+<td>200S4</td>
+<td>PTLF Full</td>
+<td>The disk at the switch is full</td>
+</tr>
+<tr>
+<td>200T2</td>
+<td>Invalid Transaction Date</td>
+<td>Input error. Please check your inputs and try again.</td>
+</tr>
+<tr>
+<td>200T3</td>
+<td>Card not supported</td>
+<td>Card not supported</td>
+</tr>
+<tr>
+<td>200T5</td>
+<td>CAF Status=0 or 9</td>
+<td>Rejected by the switch due to error in authorisation.</td>
+</tr>
+<tr>
+<td>20100</td>
+<td>Invalid Expiry Date Format</td>
+<td>If expiry date does not follow the format MM/YY or contains an invalid date</td>
+</tr>
+<tr>
+<td>20101</td>
+<td>No Account / No Customer (Token incorrect or invalid)</td>
+<td>Authentication Error. There is no card or Token on a customer that is being charged</td>
+</tr>
+<tr>
+<td>20102</td>
+<td>Invalid Merchant/WalletID</td>
+<td>If Merchant ID does not follow the format , or Merchant ID is not found in MonEFlow?s database</td>
+</tr>
+<tr>
+<td>20103</td>
+<td>Card type/Payment method not supported</td>
+<td>Merchant is not configured to accept payment from this particular Credit Card/Payment type</td>
+</tr>
+<tr>
+<td>20104</td>
+<td>Gateway Reject - Invalid Transaction</td>
+<td>Gateway Reject - Invalid Transaction</td>
+</tr>
+<tr>
+<td>20105</td>
+<td>Gateway Reject - Violation</td>
+<td>Missing or incorrect values or parameters</td>
+</tr>
+<tr>
+<td>20106</td>
+<td>Unsupported currency</td>
+<td>Currency is not supported, or currency code required</td>
+</tr>
+<tr>
+<td>20107</td>
+<td>Billing address is missing</td>
+<td>There&#39;s an error with this transaction. Please enter complete billing address</td>
+</tr>
+<tr>
+<td>20108</td>
+<td>Declined - Updated Cardholder Available</td>
+<td>The transaction was declined because the card was expired, and the card holder received a new card</td>
+</tr>
+<tr>
+<td>20109</td>
+<td>Authorisation Already Reversed (voided) or Capture is larger than initial Authorised Value</td>
+<td>Authorisation Already Reversed (voided) or Capture is larger than initial Authorised Value</td>
+</tr>
+<tr>
+<td>20110</td>
+<td>Authorisation completed</td>
+<td>Authorisation completed</td>
+</tr>
+<tr>
+<td>20111</td>
+<td>Transaction already reversed</td>
+<td>Refunded or Chargebacked</td>
+</tr>
+<tr>
+<td>20112</td>
+<td>Merchant not MasterCard SecureCode enabled.</td>
+<td>Merchant not MasterCard SecureCode enabled.</td>
+</tr>
+<tr>
+<td>20113</td>
+<td>Invalid Property</td>
+<td>Invalid Property</td>
+</tr>
+<tr>
+<td>20114</td>
+<td>Invalid Channel or Token is incorrect</td>
+<td>Invalid Channel or Token is incorrect</td>
+</tr>
+<tr>
+<td>20115</td>
+<td>Missing/Invalid Lifetime</td>
+<td>Missing/Invalid Lifetime</td>
+</tr>
+<tr>
+<td>20116</td>
+<td>Invalid Encoding</td>
+<td>Should be UTF-8. Please refer to relevant documentation</td>
+</tr>
+<tr>
+<td>20117</td>
+<td>Invalid API Version</td>
+<td>Invalid API Version</td>
+</tr>
+<tr>
+<td>20118</td>
+<td>Transaction Pending</td>
+<td>Final result is not yet known. Try a new status request soon to obtain an updated status</td>
+</tr>
+<tr>
+<td>20119</td>
+<td>Invalid Batch data and/or batch data is missing</td>
+<td>Such as Directory, Batch ID etc.</td>
+</tr>
+<tr>
+<td>20120</td>
+<td>Invalid Customer/User</td>
+<td>Invalid Customer/User</td>
+</tr>
+<tr>
+<td>20121</td>
+<td>Transaction Limit for Merchant/Terminal exceeded</td>
+<td>Transaction Limit for Merchant/Terminal exceeded</td>
+</tr>
+<tr>
+<td>20150</td>
+<td>Card not 3D enabled.</td>
+<td>Card not 3D enabled.</td>
+</tr>
+<tr>
+<td>20152</td>
+<td>Initial 3D transaction not completed within 15 minutes</td>
+<td>Initial 3D transaction not completed within 15 minutes</td>
+</tr>
+<tr>
+<td>30004</td>
+<td>Pick Up Card (No Fraud)</td>
+<td>The customer?s issuing bank has prevented the transaction from being authorised.</td>
+</tr>
+<tr>
+<td>30007</td>
+<td>Pick Up Card, Special Conditions</td>
+<td>The customer?s issuing bank has prevented the transaction from being authorised because fraudulent activity has been detected on this account.</td>
+</tr>
+<tr>
+<td>30015</td>
+<td>No Such Issuer</td>
+<td>The card number entered is invalid because it does not start with a 3 (AMEX), 4 (Visa), 5 (MasterCard) or 6 (Discover).</td>
+</tr>
+<tr>
+<td>30033</td>
+<td>Expired Card - Pick Up</td>
+<td>Expired Card - Pick Up</td>
+</tr>
+<tr>
+<td>30034</td>
+<td>Suspected Fraud - Pick Up</td>
+<td>Suspected Fraud - Pick Up</td>
+</tr>
+<tr>
+<td>30035</td>
+<td>Contact Acquirer - Pick Up</td>
+<td>Contact Acquirer - Pick Up</td>
+</tr>
+<tr>
+<td>30036</td>
+<td>Restricted Card - Pick Up</td>
+<td>Restricted Card - Pick Up</td>
+</tr>
+<tr>
+<td>30037</td>
+<td>Call Acquirer Security - Pick Up</td>
+<td>Call Acquirer Security - Pick Up</td>
+</tr>
+<tr>
+<td>30038</td>
+<td>Allowable PIN Tries Exceeded - pick up</td>
+<td>Allowable PIN Tries Exceeded - pick up</td>
+</tr>
+<tr>
+<td>30041</td>
+<td>Lost Card - Pick Up</td>
+<td>The customer?s issuing bank has prevented the transaction from being authorised because the card?s rightful owner has reported it as lost.</td>
+</tr>
+<tr>
+<td>30043</td>
+<td>Stolen Card - Pick Up</td>
+<td>The customer?s issuing bank has prevented the transaction from being authorised because the card?s rightful owner has reported it as lost.</td>
+</tr>
+<tr>
+<td>40101</td>
+<td>Transaction blocked due to Risk</td>
+<td>Transaction refused due to risk model</td>
+</tr>
+<tr>
+<td>40102</td>
+<td>Country not supported</td>
+<td>The merchant country is not supported.</td>
+</tr>
+<tr>
+<td>40103</td>
+<td>Gateway Reject - Blacklist</td>
+<td>Transaction cannot be processed - Payment attributes in Blacklist</td>
+</tr>
+<tr>
+<td>40104</td>
+<td>Gateway Reject - CVV is missing or incorrect</td>
+<td>The merchant&#39;s configuration requires a CVV to be entered, but no CVV was provided with this transaction or CVV is incorrect.</td>
+</tr>
+<tr>
+<td>40108</td>
+<td>Gateway Reject - Post code failed</td>
+<td>The card&#39;s post code failed validation.</td>
+</tr>
+<tr>
+<td>40109</td>
+<td>Gateway Reject - Missing required data</td>
+<td>Please make sure all required data is sent, such as: CVV, Expiry date, Cardholder name, Billing address, Postcode etc.</td>
+</tr>
+<tr>
+<td>40110</td>
+<td>Missing 3DSecure data or data is not correct</td>
+<td>Missing 3DSecure data or data is not correct</td>
+</tr>
+<tr>
+<td>40111</td>
+<td>AVS not matched</td>
+<td>The transaction was declined because of a merchant risk filter for AVS. Specifically, the merchant has set to decline transaction when the AVS returned a no match (AVS = N).</td>
+</tr>
+<tr>
+<td>40131</td>
+<td>Mismatch - Shipping Country to Billing Country</td>
+<td>Mismatch - Shipping Country to Billing Country</td>
+</tr>
+<tr>
+<td>40132</td>
+<td>Mismatch - Shipping Country to BIN Country</td>
+<td>Mismatch - Shipping Country to BIN Country</td>
+</tr>
+<tr>
+<td>40133</td>
+<td>Mismatch - Shipping Country to IP Country</td>
+<td>Mismatch - Shipping Country to IP Country</td>
+</tr>
+<tr>
+<td>40134</td>
+<td>Mismatch - Shipping Country to Phone (Country)</td>
+<td>Mismatch - Shipping Country to Phone (Country)</td>
+</tr>
+<tr>
+<td>40135</td>
+<td>Mismatch - Billing Country to BIN Country</td>
+<td>Mismatch - Billing Country to BIN Country</td>
+</tr>
+<tr>
+<td>40136</td>
+<td>Mismatch - Billing Country to IP Country</td>
+<td>Mismatch - Billing Country to IP Country</td>
+</tr>
+<tr>
+<td>40137</td>
+<td>Mismatch - Billing Country to Phone (Country)</td>
+<td>Mismatch - Billing Country to Phone (Country)</td>
+</tr>
+<tr>
+<td>40138</td>
+<td>Mismatch - BIN Country to IP Country</td>
+<td>Mismatch - BIN Country to IP Country</td>
+</tr>
+<tr>
+<td>40139</td>
+<td>Mismatch - BIN Country to Phone (Country)</td>
+<td>Mismatch - BIN Country to Phone (Country)</td>
+</tr>
+<tr>
+<td>50101</td>
+<td>Shopper Redirected</td>
+<td>Shopper Redirected</td>
+</tr>
+<tr>
+<td>50102</td>
+<td>Authorised</td>
+<td>Authorised</td>
+</tr>
+<tr>
+<td>50103</td>
+<td>Pending Payment</td>
+<td>Pending Payment</td>
+</tr>
+<tr>
+<td>50104</td>
+<td>Captured</td>
+<td>Captured</td>
+</tr>
+<tr>
+<td>50105</td>
+<td>Settled</td>
+<td>Settled</td>
+</tr>
+<tr>
+<td>50106</td>
+<td>Expired</td>
+<td>Expired</td>
+</tr>
+<tr>
+<td>60101</td>
+<td>MerchantDefaultRiskResponseCode</td>
+<td>MerchantDefaultRiskResponseCode</td>
+</tr>
+<tr>
+<td>82005</td>
+<td>Issuer Network Unavailable</td>
+<td>The Credit Card Issuer is Temporarily not Reachable</td>
+</tr>
+<tr>
+<td>84037</td>
+<td>Terminals Exist for Brand</td>
+<td>Terminals Exist for Brand</td>
+</tr>
+<tr>
+<td>84038</td>
+<td>Terminals Exist for Merchant</td>
+<td>Terminals Exist for Merchant</td>
+</tr>
+<tr>
+<td>84039</td>
+<td>Merchants Exist for Category</td>
+<td>Merchants Exist for Category</td>
+</tr>
+<tr>
+<td>90000</td>
+<td>This transaction could not be completed.</td>
+<td>This transaction could not be completed. Please redirect your customer to PayPal.</td>
+</tr>
+<tr>
+<td>90001</td>
+<td>Shipping address line 1 is required.</td>
+<td>The field Shipping address line 1 is required.</td>
+</tr>
+<tr>
+<td>90002</td>
+<td>Shipping Address City is required.</td>
+<td>The field Shipping Address City is required.</td>
+</tr>
+<tr>
+<td>90003</td>
+<td>Shipping Address State is required.</td>
+<td>The field Shipping Address State is required.</td>
+</tr>
+<tr>
+<td>90004</td>
+<td>Shipping Address Postal Code is required.</td>
+<td>The field Shipping Address Postal Code is required.</td>
+</tr>
+<tr>
+<td>90005</td>
+<td>Shipping Address Country is required.</td>
+<td>The field Shipping Address Country is required.</td>
+</tr>
+<tr>
+<td>90006</td>
+<td>Shipping Address Invalid City State Postal Code.</td>
+<td>A match of the Shipping Address City, State, and Postal Code failed.</td>
+</tr>
+<tr>
+<td>90007</td>
+<td>Transaction refused because of an invalid argument. See additional error messages for details.</td>
+<td>Order total is invalid.</td>
+</tr>
+<tr>
+<td>90008</td>
+<td>Amount limit exceeded.</td>
+<td>Amount specified exceeds allowable limit.</td>
+</tr>
+<tr>
+<td>90009</td>
+<td>Internal error.</td>
+<td>Transaction failed due to internal error.</td>
+</tr>
+<tr>
+<td>90010</td>
+<td>Account is locked or inactive.</td>
+<td>Account is locked or inactive.</td>
+</tr>
+<tr>
+<td>90011</td>
+<td>PayPal is not available for the moment.</td>
+<td>PayPal is not available for the moment. Please try later.</td>
+</tr>
+<tr>
+<td>90012</td>
+<td>Payment not authorised.</td>
+<td>Payment has not been authorised by the user.</td>
+</tr>
+<tr>
+<td>90013</td>
+<td>This transaction could not be completed.</td>
+<td>This transaction could not be completed. Please redirect your customer to PayPal.</td>
+</tr>
+<tr>
+<td>90014</td>
+<td>Authorisation is voided.</td>
+<td>Authorisation is voided. Close the order or authorization.</td>
+</tr>
+<tr>
+<td>90015</td>
+<td>Authorisation expired.</td>
+<td>Authorisation has expired. Close the order or authorization.</td>
+</tr>
+<tr>
+<td>90016</td>
+<td>Authorisation completed.</td>
+<td>Authorisation has already been completed. Close the order or authorisation.</td>
+</tr>
+<tr>
+<td>90017</td>
+<td>Currency not supported.</td>
+<td>Currency is not supported.</td>
+</tr>
+<tr>
+<td>90018</td>
+<td>Authorisation &amp; capture unavailable.</td>
+<td>Authorisation &amp; Capture feature unavailable. Contact PayPal Customer Service.</td>
+</tr>
+<tr>
+<td>90019</td>
+<td>Currency mismatch.</td>
+<td>Currency of capture must be the same as currency of authorization.</td>
+</tr>
+<tr>
+<td>90020</td>
+<td>Cannot void reauthorisation.</td>
+<td>You can void only the original authorisation, not a reauthorisation.</td>
+</tr>
+<tr>
+<td>90021</td>
+<td>Transaction already voided or expired.</td>
+<td>Transaction has already been voided or expired.</td>
+</tr>
+<tr>
+<td>90022</td>
+<td>Maximum number of authorisation allowed for the order is reached.</td>
+<td>Maximum number of authorization allowed for the order is reached. Capture this order.</td>
+</tr>
+<tr>
+<td>90023</td>
+<td>Duplicate transaction.</td>
+<td>Authorisation has has already been made for this Track ID.</td>
+</tr>
+<tr>
+<td>90024</td>
+<td>This transaction cannot be processed at this time. Please try again later.</td>
+<td>This transaction cannot be processed at this time. Please try again later.</td>
+</tr>
+<tr>
+<td>90025</td>
+<td>Processor Warning.</td>
+<td>The authorisation is being processed.</td>
+</tr>
+<tr>
+<td>90026</td>
+<td>This transaction cannot be processed at this time. Please try again later.</td>
+<td>This transaction cannot be processed at this time. Please try again later.</td>
+</tr>
+<tr>
+<td>90027</td>
+<td>Request for billing address failed.</td>
+<td>Billing address request is not enabled for merchant.</td>
+</tr>
+<tr>
+<td>90028</td>
+<td>Duplicate Request.</td>
+<td>A successful transaction has already been completed for this order.</td>
+</tr>
+<tr>
+<td>90029</td>
+<td>Multiple default shipping options specified.</td>
+<td>More than one shipping option type is marked as the default; you can only specify one default shipping option at a time.</td>
+</tr>
+<tr>
+<td>90030</td>
+<td>No default shipping option specified.</td>
+<td>You must specify one shipping option type as the default.</td>
+</tr>
+<tr>
+<td>90031</td>
+<td>Invalid shipping total.</td>
+<td>Invalid shipping total; it should equal the shipping amount of the selected shipping option.</td>
+</tr>
+<tr>
+<td>90032</td>
+<td>Maximum amount of order is less than itemized amounts.</td>
+<td>Maximum amount of order is less than itemized amounts; the value of all items, including handling, shipping, tax, and insurance cannot be greater than the maximum amount of the order.</td>
+</tr>
+<tr>
+<td>90033</td>
+<td>Failed Payment Review.</td>
+<td>The transaction was rejected by PayPal because it failed Payment Review. PayPal declined the transaction and to contact PayPal Customer Service</td>
+</tr>
+<tr>
+<td>90034</td>
+<td>Buyer Cannot Pay.</td>
+<td>The Buyer cannot pay with PayPal for this transaction.</td>
+</tr>
+<tr>
+<td>90035</td>
+<td>Buyer Didn&#39;t Complete.</td>
+<td>The Buyer returned without completing the payment.</td>
+</tr>
+<tr>
+<td>90036</td>
+<td>Duplicate request for this order</td>
+<td>The transaction is order</td>
+</tr>
+<tr>
+<td>90037</td>
+<td>Capture not allowed.</td>
+<td>Capture on Order not allowed for Installments Transaction</td>
+</tr>
+<tr>
+<td>90038</td>
+<td>This authorisation must be captured, voided, updated or reauthorised through the gateway.</td>
+<td>This authorisation can only be handled through the gateway which created it. This authorisation must be captured, voided, updated or reauthorised through the gateway.</td>
+</tr>
+<tr>
+<td>90039</td>
+<td>Duplicate transaction</td>
+<td>Payment has already been made for this Track ID.</td>
+</tr>
+<tr>
+<td>90040</td>
+<td>Transaction refused.</td>
+<td>The total amount for product does not match the order amount.</td>
+</tr>
+<tr>
+<td>90041</td>
+<td>Transaction refused.</td>
+<td>The buyer account is restricted.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">shell</a>
+                <a href="#" data-language-name="javascript">javascript</a>
+          </div>
+      </div>
+    </div>
+
+    <script>
+    // config mermaid init call
+    // http://knsv.github.io/mermaid/#configuration
+    //
+    // You can edit the 'MERMAID_CONFIG' variable below.
+    MERMAID_CONFIG = {
+      startOnLoad: false
+    }
+
+    if (window['MERMAID_CONFIG']) {
+      window['MERMAID_CONFIG'].startOnLoad = false
+      window['MERMAID_CONFIG'].cloneCssStyles = false
+      window['MERMAID_CONFIG'].theme = "mermaid.css"
+    }
+    mermaid.initialize(window['MERMAID_CONFIG'] || {})
+
+    if (typeof(window['Reveal']) !== 'undefined') {
+      function mermaidRevealHelper(event) {
+        var currentSlide = event.currentSlide
+        var diagrams = currentSlide.querySelectorAll('.mermaid')
+        for (var i = 0; i < diagrams.length; i++) {
+          var diagram = diagrams[i]
+          if (!diagram.hasAttribute('data-processed')) {
+            mermaid.init(null, diagram, ()=> {
+              Reveal.slide(event.indexh, event.indexv)
+            })
+          }
+        }
+      }
+
+      Reveal.addEventListener('slidechanged', mermaidRevealHelper)
+      Reveal.addEventListener('ready', mermaidRevealHelper)
+    } else {
+      mermaid.init(null, document.getElementsByClassName('mermaid'))
+    }
+    </script>
+
+
+  </body>
+</html>
